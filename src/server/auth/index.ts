@@ -5,6 +5,8 @@ import {cookies} from "next/headers";
 import {revalidateTag} from "next/cache";
 
 const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+console.log("Server URL:", server_url);
+
 
 export const register_user = async (payload:IRegisterUser) => {
     const response = await fetch(server_url + "/auth/register", {

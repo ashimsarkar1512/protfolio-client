@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import GlobalBackground from "@/components/GlobalBackground"
+import { Toaster } from "sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({
       >
         <GlobalBackground />
         <div className="relative z-10">{children}</div>
+          <Toaster richColors={true} visibleToasts={1} />
         <Analytics />
       </body>
     </html>
