@@ -15,6 +15,11 @@ import MarkdownIt from 'markdown-it';
 import {Button} from "@/components/ui/button";
 import {create_new_blog} from "@/server/blog";
 import {TBlog} from "@/types/blog";
+
+if (typeof globalThis !== "undefined") {
+    (globalThis as { React?: typeof React }).React = React;
+}
+
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
     ssr: false,
 });
@@ -103,7 +108,7 @@ const AddBlogForm = () => {
 
     const onSubmit = async (data: FormValues) => {
         setIsLoading(true);
-        const id = toast.loading('Verifying product data ...');
+        const id = toast.loading('Validating blog details...');
         if (!(selectedImage instanceof File)) {
             toast.error('Invalid image file selected',{id});
             setIsLoading(false);
@@ -129,45 +134,44 @@ const AddBlogForm = () => {
                 setSelectedImage(null);
                 setImagePreview(null);
             } else {
-                toast.error(res?.message, {id});
+                toast.error(res?.message || 'Failed to create blog', {id});
             }
-            setIsLoading(false);
 
         } catch (error) {
-            toast.error(JSON.stringify(error) || 'Failed to create product', {id});
+            toast.error(JSON.stringify(error) || 'Failed to create blog', {id});
+        } finally {
             setIsLoading(false);
         }
     };
 
 
     return (
-        <div className="w-full max-w-6xl mx-auto p-6">
-            <div
-                className="bg-white rounded-lg shadow-md overflow-hidden"
-            >
-                <div className="bg-secondary p-6 text-center">
-                    <h1 className="text-2xl font-bold ">Create New Blog</h1>
+        <div className="mx-auto w-full max-w-6xl px-3 py-4 sm:px-6 sm:py-6">
+            <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 shadow-xl shadow-slate-200/70 backdrop-blur">
+                <div className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-indigo-50/60 px-4 py-5 text-center sm:px-6">
+                    <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">Create New Blog</h1>
+                    <p className="mt-1 text-sm text-slate-600">Publish clear, engaging content with professional metadata and cover image.</p>
                 </div>
 
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="p-8"
+                    className="space-y-8 p-4 sm:p-6 lg:p-8"
 
                 >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
                         <div className="space-y-5">
 
                             <div className="space-y-2">
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="title" className="block text-sm font-medium text-slate-700">
                                     Blog Title
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <input
                                         id="title"
-                                        type="title"
+                                        type="text"
                                         {...register('title', {required: 'Blog Title is required'})}
-                                        className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="World Info dev"
+                                        className="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="How I built a scalable portfolio dashboard"
                                     />
                                 </div>
                                 {errors.title && (
@@ -178,16 +182,16 @@ const AddBlogForm = () => {
 
                             {/* Blog Tags */}
                             <div className="space-y-2">
-                                <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="blogTags" className="block text-sm font-medium text-slate-700">
                                     Blog Tags (comma separated)
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <textarea
-                                        id="tags"
-                                        rows={6}
+                                        id="blogTags"
+                                        rows={8}
                                         {...register('blogTags', {required: 'Blog tag is required'})}
-                                        className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="Enter Blog Tag-> react, node, foryou,....."
+                                        className="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="react, portfolio, authentication, ui"
                                     />
                                 </div>
                                 {errors.blogTags && (
@@ -201,7 +205,7 @@ const AddBlogForm = () => {
 
                         {/* Product Image Upload */}
                         <div className="space-y-2">
-                            <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="image-upload" className="block text-sm font-medium text-slate-700">
                                 Blog Image
                             </label>
                             <div className="mt-1 flex flex-col items-center">
@@ -212,10 +216,10 @@ const AddBlogForm = () => {
                                         >
                                             <Image
                                                 src={imagePreview}
-                                                alt="Product preview"
+                                                alt="Blog preview"
                                                 width={100}
                                                 height={100}
-                                                className="w-full h-64 object-contain rounded-md border border-gray-300"
+                                                className="h-64 w-full rounded-md border border-slate-300 object-contain"
                                             />
                                             <button
                                                 type="button"
@@ -235,7 +239,7 @@ const AddBlogForm = () => {
                                     </div>
                                 ) : (
                                     <div
-                                        className={`flex justify-center px-6 pt-5 pb-6 border-2 ${dragActive ? 'border-amber-500 bg-amber-50' : 'border-gray-300 border-dashed'} rounded-md w-full h-64 transition-colors duration-200`}
+                                        className={`flex h-64 w-full justify-center rounded-md border-2 px-6 pb-6 pt-5 transition-colors duration-200 ${dragActive ? 'border-indigo-500 bg-indigo-50' : 'border-dashed border-slate-300 bg-slate-50/70'}`}
                                         onDragEnter={handleDrag}
                                         onDragLeave={handleDrag}
                                         onDragOver={handleDrag}
@@ -246,12 +250,12 @@ const AddBlogForm = () => {
                                             className="space-y-1 text-center flex flex-col items-center justify-center">
                                             <div
                                             >
-                                                <FaImage className="mx-auto h-12 w-12 text-gray-400"/>
+                                                <FaImage className="mx-auto h-12 w-12 text-slate-400"/>
                                             </div>
-                                            <div className="flex text-sm text-gray-600">
+                                            <div className="flex flex-wrap justify-center text-sm text-slate-600">
                                                 <label
                                                     htmlFor="image-upload"
-                                                    className="relative cursor-pointer bg-white rounded-md font-medium text-amber-600 hover:text-amber-500 focus-within:outline-none"
+                                                    className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
                                                 >
                                                     <span>Upload a file</span>
                                                     <input
@@ -266,15 +270,15 @@ const AddBlogForm = () => {
                                                 </label>
                                                 <p className="pl-1">or drag and drop</p>
                                             </div>
-                                            <p className="text-xs text-gray-500">PNG, JPG, GIF, WEBP up to 10MB</p>
+                                            <p className="text-xs text-slate-500">PNG, JPG, GIF, WEBP up to 10MB</p>
                                         </div>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <div className="col-span-2 space-y-2">
-                            <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                        <div className="space-y-2 lg:col-span-2">
+                            <label htmlFor="content" className="block text-sm font-medium text-slate-700">
                                 Blog Description
                             </label>
                             <Controller
@@ -284,7 +288,7 @@ const AddBlogForm = () => {
                                 render={({field: {onChange, value}}) => (
                                     <MdEditor
                                         value={value}
-                                        style={{height: "500px"}}
+                                        style={{height: "380px"}}
                                         renderHTML={(text) => mdParser.render(text)}
                                         onChange={({text}) => onChange(text)}
 
@@ -296,12 +300,12 @@ const AddBlogForm = () => {
 
                     {/* Submit Button */}
                     <div
-                        className="mt-8 flex justify-end"
+                        className="mt-2 flex justify-end"
                     >
                         <Button
                             type="submit"
                             disabled={isLoading}
-                            className={` ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            className={`h-11 px-6 text-sm font-medium ${isLoading ? 'cursor-not-allowed opacity-70' : ''}`}
                         >
                             {isLoading ? (
                                 <>

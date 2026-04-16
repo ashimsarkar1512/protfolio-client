@@ -3,7 +3,9 @@
 import {TSkill} from "@/types/skill";
 import {cookies} from "next/headers";
 import {revalidateTag} from "next/cache";
-const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+import {getServerUrl} from "@/lib/server-url";
+
+const server_url = getServerUrl();
 
 export const add_skill = async (payload:TSkill) => {
     const token =(await cookies()).get("accessToken")?.value;

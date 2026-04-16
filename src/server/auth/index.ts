@@ -3,9 +3,9 @@
 import {ILoginUser, IRegisterUser} from "@/types/auth";
 import {cookies} from "next/headers";
 import {revalidateTag} from "next/cache";
+import {getServerUrl} from "@/lib/server-url";
 
-const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
-console.log("Server URL:", server_url);
+const server_url = getServerUrl();
 
 
 export const register_user = async (payload:IRegisterUser) => {
@@ -29,7 +29,11 @@ export const login_user = async (payload:ILoginUser) => {
     const result = await response.json();
     console.log(result);
     if (result?.success) {
-        (await cookies()).set("accessToken", result.data.token);
+        (await cookies()).set("accessToken", result.data.token, {
+            path: "/",
+            httpOnly: true,
+            sameSite: "lax",
+        });
     }
     return result;
 }
@@ -39,7 +43,7 @@ export const get_current_user_action = async () => {
     if (!accessToken) {
         throw new Error("Access token not found");
     }
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/me`, {
+    const res = await fetch(`${server_url}/auth/me`, {
         headers: {
             "Authorization": accessToken,
             "Content-Type": "application/json"
@@ -65,7 +69,7 @@ export const log_out_user_action = async () => {
 
 export const get_dashboard_data = async ()=>{
     const accessToken = (await cookies()).get("accessToken")?.value;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/overview`, {
+    const res = await fetch(`${server_url}/auth/overview`, {
         headers: {
             "Authorization": accessToken!,
         },
@@ -78,7 +82,7 @@ export const get_dashboard_data = async ()=>{
 
 export const mark_as_read_message = async (id:string) => {
     const accessToken = (await cookies()).get("accessToken")?.value;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/message/${id}`, {
+    const res = await fetch(`${server_url}/message/${id}`, {
         method: "PATCH",
         headers: {
             "Authorization": accessToken!,

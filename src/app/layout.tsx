@@ -20,12 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} bg-black text-white relative overflow-x-hidden`}
-      >
+      <body className={`${inter.className} relative overflow-x-hidden text-slate-900`}>
         <GlobalBackground />
         <div className="relative z-10">{children}</div>
-          <Toaster richColors={true} visibleToasts={1} />
+        <Toaster richColors={true} visibleToasts={1} />
         <Analytics />
       </body>
     </html>

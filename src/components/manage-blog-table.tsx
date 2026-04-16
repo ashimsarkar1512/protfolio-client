@@ -54,23 +54,25 @@ export default function ManageBlogsTable({blogs}: ManageBlogsTableProps) {
     }
 
     return (
-        <div className="w-full overflow-x-auto">
-            <div className="bg-secondary p-6 text-center mb-4">
-                <h1 className="text-2xl font-bold ">All Blogs</h1>
+        <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="mb-0 border-b border-slate-200 bg-slate-50 p-4 text-center sm:p-6">
+                <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">All Blogs</h1>
+                <p className="mt-1 text-sm text-slate-600">Manage blog content and keep your knowledge section updated.</p>
             </div>
+            <div className="overflow-x-auto">
             <Table>
                 <TableHeader>
-                    <TableRow className="bg-secondary">
-                        <TableHead>Blog</TableHead>
-                        <TableHead>Tags</TableHead>
-                        <TableHead>Created At</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                    <TableRow className="bg-slate-50">
+                        <TableHead className="whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Blog</TableHead>
+                        <TableHead className="whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Tags</TableHead>
+                        <TableHead className="whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Created At</TableHead>
+                        <TableHead className="whitespace-nowrap px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {blogs.map((blog) => (
-                        <TableRow key={blog._id}>
-                            <TableCell>
+                        <TableRow key={blog._id} className="hover:bg-slate-50/80">
+                            <TableCell className="px-4 py-3">
                                 <div className="flex items-center gap-3">
                                     {blog.blogImage ? (
                                         <Image
@@ -81,18 +83,18 @@ export default function ManageBlogsTable({blogs}: ManageBlogsTableProps) {
                                             className="h-10 w-10 rounded object-cover"
                                         />
                                     ) : (
-                                        <div className="h-10 w-10 rounded bg-gray-200 text-center text-sm text-gray-500 flex items-center justify-center">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded bg-slate-200 text-center text-sm text-slate-600">
                                             N/A
                                         </div>
                                     )}
-                                    <span className="font-medium">{blog.title}</span>
+                                    <span className="font-medium text-slate-900">{blog.title}</span>
                                 </div>
                             </TableCell>
-                            <TableCell>{blog.blogTags.join(", ")}</TableCell>
-                            <TableCell>
+                            <TableCell className="max-w-[260px] px-4 py-3 text-sm text-slate-700">{blog.blogTags.join(", ")}</TableCell>
+                            <TableCell className="whitespace-nowrap px-4 py-3 text-sm text-slate-700">
                                 {blog.createdAt ? formatLocalTime(blog.createdAt) : "N/A"}
                             </TableCell>
-                            <TableCell className="text-right space-x-2">
+                            <TableCell className="space-x-2 whitespace-nowrap px-4 py-3 text-right">
                                 <BlogUpdateDialog data={blog}/>
                                 <Button onClick={()=>handleDelete(blog?._id as string)} variant="destructive" >
                                     Delete
@@ -102,6 +104,7 @@ export default function ManageBlogsTable({blogs}: ManageBlogsTableProps) {
                     ))}
                 </TableBody>
             </Table>
+            </div>
         </div>
     );
 }

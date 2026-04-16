@@ -16,6 +16,11 @@ import MarkdownIt from 'markdown-it';
 import {Button} from "@/components/ui/button";
 import {TProject} from "@/types/project";
 import {create_new_project} from "@/server/project";
+
+if (typeof globalThis !== "undefined") {
+    (globalThis as { React?: typeof React }).React = React;
+}
+
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
     ssr: false,
 });
@@ -115,9 +120,10 @@ const AddProjectForm = () => {
 
     const onSubmit = async (data: FormValues) => {
         setIsLoading(true);
-        const id = toast.loading('Verifying product data ...');
+        const id = toast.loading('Validating project details...');
         if (!(selectedImage instanceof File)) {
-            toast.error('Invalid image file selected');
+            toast.error('Please upload a valid project image', {id});
+            setIsLoading(false);
             return;
         }
 
@@ -138,16 +144,16 @@ const AddProjectForm = () => {
             // create new project
             const res = await create_new_project(formData)
             if(res?.success){
-                toast.success('Product successfully created',{id});
+                toast.success('Project created successfully', {id});
                 reset()
                 setSelectedImage(null);
                 setImagePreview(null);
             }else{
-                toast.error(res?.message,{id});
+                toast.error(res?.message || 'Failed to create project', {id});
             }
 
         } catch (error) {
-            toast.error(JSON.stringify(error) || 'Failed to create product', {id});
+            toast.error(JSON.stringify(error) || 'Failed to create project', {id});
         } finally {
             setIsLoading(false);
         }
@@ -155,33 +161,32 @@ const AddProjectForm = () => {
 
 
     return (
-        <div className="w-full max-w-6xl mx-auto p-6">
-            <div
-                className="bg-white rounded-lg shadow-md overflow-hidden"
-            >
-                <div className="bg-secondary p-6 text-center">
-                    <h1 className="text-2xl font-bold ">Create New Project</h1>
+        <div className="mx-auto w-full max-w-6xl px-3 py-4 sm:px-6 sm:py-6">
+            <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 shadow-xl shadow-slate-200/70 backdrop-blur">
+                <div className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-indigo-50/60 px-4 py-5 text-center sm:px-6">
+                    <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">Create New Project</h1>
+                    <p className="mt-1 text-sm text-slate-600">Add complete project information with clean and user-friendly details.</p>
                 </div>
 
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="p-8"
+                    className="space-y-8 p-4 sm:p-6 lg:p-8"
 
                 >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-4">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+                        <div className="space-y-5">
                             {/* Product Name */}
                             <div className="space-y-2">
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="projectName" className="block text-sm font-medium text-slate-700">
                                     Project Name
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <input
-                                        id="name"
+                                        id="projectName"
                                         type="text"
                                         {...register('projectName', {required: 'Project name is required'})}
-                                        className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="World Info dev"
+                                        className="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="Portfolio Platform"
                                     />
                                 </div>
                                 {errors.projectName && (
@@ -191,18 +196,18 @@ const AddProjectForm = () => {
 
                             {/* Product Price */}
                             <div className="space-y-2">
-                                <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="slogan" className="block text-sm font-medium text-slate-700">
                                     Slogan
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <input
-                                        id="price"
+                                        id="slogan"
                                         type="text"
                                         {...register('slogan', {
                                             required: 'Slogan is required!',
                                         })}
-                                        className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="Explore world and learn more.."
+                                        className="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="Manage and publish modern portfolio content"
                                     />
                                 </div>
                                 {errors.slogan && (
@@ -212,18 +217,18 @@ const AddProjectForm = () => {
 
                             {/* Product Tags */}
                             <div className="space-y-2">
-                                <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="technologies" className="block text-sm font-medium text-slate-700">
                                     Used Technologies (comma separated)
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <input
-                                        id="tags"
+                                        id="technologies"
                                         type="text"
                                         {...register('technologies', {
                                             required: 'Technology is required!',
                                         })}
-                                        className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="Next.js, React js, TypeScript"
+                                        className="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="Next.js, React, TypeScript, Tailwind CSS"
                                     />
                                 </div>
                                 {errors.technologies && (
@@ -234,19 +239,19 @@ const AddProjectForm = () => {
 
                             {/* Project Featured */}
                             <div className="space-y-2">
-                                <label htmlFor="features" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="features" className="block text-sm font-medium text-slate-700">
                                     Project Features (comma separated)
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <div className="absolute top-3 left-3 flex items-start pointer-events-none">
-                                        <FaAlignLeft className="h-5 w-5 text-gray-400"/>
+                                        <FaAlignLeft className="h-5 w-5 text-slate-400"/>
                                     </div>
                                     <textarea
                                         id="features"
-                                        rows={10}
+                                        rows={8}
                                         {...register('features', {required: 'Feature is required'})}
-                                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="Enter projecr features-> Live updage, Realtime communication.."
+                                        className="block w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="Role-based dashboard, markdown content editor, media upload..."
                                     />
                                 </div>
                                 {errors.features && (
@@ -255,20 +260,20 @@ const AddProjectForm = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-5">
                             <div className="space-y-2">
-                                <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="liveLink" className="block text-sm font-medium text-slate-700">
                                     Live Demo Link
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <input
-                                        id="tags"
-                                        type="text"
+                                        id="liveLink"
+                                        type="url"
                                         {...register('liveLink', {
                                             required: 'Demo Link is required!',
                                         })}
-                                        className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="www.world-info.dev"
+                                        className="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="https://www.yourproject.com"
                                     />
                                 </div>
                                 {errors.liveLink && (
@@ -276,18 +281,18 @@ const AddProjectForm = () => {
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="frontEndGitRepo" className="block text-sm font-medium text-slate-700">
                                     Front-end GitHub Link
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <input
-                                        id="tags"
-                                        type="text"
+                                        id="frontEndGitRepo"
+                                        type="url"
                                         {...register('frontEndGitRepo', {
                                             required: 'Front-end Link is required!',
                                         })}
-                                        className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="www.github.com/md-maruf-billa/word-info-dev-client"
+                                        className="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="https://github.com/username/project-client"
                                     />
                                 </div>
                                 {errors.frontEndGitRepo && (
@@ -295,18 +300,18 @@ const AddProjectForm = () => {
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="backEndGitRepo" className="block text-sm font-medium text-slate-700">
                                     Back-end GitHub Link
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <input
-                                        id="tags"
-                                        type="text"
+                                        id="backEndGitRepo"
+                                        type="url"
                                         {...register('backEndGitRepo', {
                                             required: 'Back-end Link is required!',
                                         })}
-                                        className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="www.github.com/md-maruf-billa/word-info-dev-server"
+                                        className="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                        placeholder="https://github.com/username/project-server"
                                     />
                                 </div>
                                 {errors.backEndGitRepo && (
@@ -315,7 +320,7 @@ const AddProjectForm = () => {
                             </div>
                             {/* Product Image Upload */}
                             <div className="space-y-2">
-                                <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="image-upload" className="block text-sm font-medium text-slate-700">
                                     Project Image
                                 </label>
                                 <div className="mt-1 flex flex-col items-center">
@@ -326,10 +331,10 @@ const AddProjectForm = () => {
                                             >
                                                 <Image
                                                     src={imagePreview}
-                                                    alt="Product preview"
+                                                    alt="Project preview"
                                                     width={100}
                                                     height={100}
-                                                    className="w-full h-64 object-contain rounded-md border border-gray-300"
+                                                    className="h-64 w-full rounded-md border border-slate-300 object-contain"
                                                 />
                                                 <button
                                                     type="button"
@@ -342,14 +347,14 @@ const AddProjectForm = () => {
                                                     <FaTimes className="h-4 w-4"/>
                                                 </button>
                                             </div>
-                                            <div className="mt-2 text-center text-sm text-gray-600">
+                                            <div className="mt-2 text-center text-sm text-slate-600">
                                                 <FaCheck className="inline-block mr-1 text-green-500"/>
                                                 Image selected: {selectedImage?.name}
                                             </div>
                                         </div>
                                     ) : (
                                         <div
-                                            className={`flex justify-center px-6 pt-5 pb-6 border-2 ${dragActive ? 'border-amber-500 bg-amber-50' : 'border-gray-300 border-dashed'} rounded-md w-full h-64 transition-colors duration-200`}
+                                            className={`flex h-64 w-full justify-center rounded-md border-2 px-6 pb-6 pt-5 transition-colors duration-200 ${dragActive ? 'border-indigo-500 bg-indigo-50' : 'border-dashed border-slate-300 bg-slate-50/70'}`}
                                             onDragEnter={handleDrag}
                                             onDragLeave={handleDrag}
                                             onDragOver={handleDrag}
@@ -360,12 +365,12 @@ const AddProjectForm = () => {
                                                 className="space-y-1 text-center flex flex-col items-center justify-center">
                                                 <div
                                                 >
-                                                    <FaImage className="mx-auto h-12 w-12 text-gray-400"/>
+                                                    <FaImage className="mx-auto h-12 w-12 text-slate-400"/>
                                                 </div>
-                                                <div className="flex text-sm text-gray-600">
+                                            <div className="flex flex-wrap justify-center text-sm text-slate-600">
                                                     <label
                                                         htmlFor="image-upload"
-                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-amber-600 hover:text-amber-500 focus-within:outline-none"
+                                                        className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
                                                     >
                                                         <span>Upload a file</span>
                                                         <input
@@ -380,7 +385,7 @@ const AddProjectForm = () => {
                                                     </label>
                                                     <p className="pl-1">or drag and drop</p>
                                                 </div>
-                                                <p className="text-xs text-gray-500">PNG, JPG, GIF, WEBP up to 10MB</p>
+                                            <p className="text-xs text-slate-500">PNG, JPG, GIF, WEBP up to 10MB</p>
                                             </div>
                                         </div>
                                     )}
@@ -389,8 +394,8 @@ const AddProjectForm = () => {
 
 
                         </div>
-                        <div className="col-span-2 space-y-2">
-                            <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                        <div className="space-y-2 lg:col-span-2">
+                            <label htmlFor="description" className="block text-sm font-medium text-slate-700">
                                 Project Description
                             </label>
                             <Controller
@@ -400,7 +405,7 @@ const AddProjectForm = () => {
                                 render={({ field: { onChange, value } }) => (
                                     <MdEditor 
                                         value={value}
-                                        style={{ height: "500px" }}
+                                        style={{ height: "380px" }}
                                         renderHTML={(text) => mdParser.render(text)}
                                         onChange={({ text }) => onChange(text)}
 
@@ -412,12 +417,12 @@ const AddProjectForm = () => {
 
                     {/* Submit Button */}
                     <div
-                        className="mt-8 flex justify-end"
+                        className="mt-2 flex justify-end"
                     >
                         <Button
                             type="submit"
                             disabled={isLoading}
-                            className={` ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            className={`h-11 px-6 text-sm font-medium ${isLoading ? 'cursor-not-allowed opacity-70' : ''}`}
                         >
                             {isLoading ? (
                                 <>

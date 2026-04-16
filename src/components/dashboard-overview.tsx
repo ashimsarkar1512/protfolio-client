@@ -45,155 +45,119 @@ export interface Message {
 
 
 function DashboardOverview({data}: { data: DashboardData }) {
+    const cards = [
+        {
+            label: "Projects",
+            total: data?.project?.totalProject,
+            active: data?.project?.activeProject,
+            archived: data?.project?.deleteProject,
+            icon: <GoProjectRoadmap className="text-xl text-green-600" />,
+            iconBg: "bg-green-100",
+        },
+        {
+            label: "Blogs",
+            total: data?.blog?.totalBlog,
+            active: data?.blog?.activeBlog,
+            archived: data?.blog?.deleteBlog,
+            icon: <FaBlogger className="text-xl text-purple-500" />,
+            iconBg: "bg-purple-100",
+        },
+        {
+            label: "Skills",
+            total: data?.skill?.totalSkill,
+            active: data?.skill?.activeSkill,
+            archived: data?.skill?.deleteSkill,
+            icon: <GiSkills className="text-xl text-amber-600" />,
+            iconBg: "bg-amber-100",
+        },
+        {
+            label: "Messages",
+            total: data?.message?.totalMessage,
+            active: data?.message?.newMessage,
+            archived: data?.message?.oldMessage,
+            icon: <FaComments className="text-xl text-blue-600" />,
+            iconBg: "bg-blue-100",
+        },
+    ];
 
     return (
-        <div className=" p-6">
-            <div className="mx-auto">
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Overview</h1>
-                    <p className="mt-2 text-gray-600">Welcome back, Abu-Mahid</p>
+        <div className="px-3 py-4 sm:px-6 sm:py-6">
+            <div className="mx-auto max-w-7xl">
+                <div className="mb-6 sm:mb-8">
+                    <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">Portfolio Command Center</h1>
+                    <p className="mt-1 text-sm text-slate-600 sm:text-base">Track content performance, monitor inbox activity, and keep your portfolio polished.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div
-                        className="bg-white rounded-lg shadow-sm p-6"
-                    >
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-500">Total Project&#39;s</p>
-                                <h3 className="text-2xl font-bold text-gray-900 mt-1">{data?.project?.totalProject}</h3>
+                <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    {cards.map((card) => (
+                        <div key={card.label} className="rounded-2xl border border-slate-200/80 bg-white/90 p-5 shadow-lg shadow-slate-200/60 backdrop-blur">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-slate-500">{card.label}</p>
+                                    <h3 className="mt-2 text-2xl font-bold text-slate-900">{card.total || 0}</h3>
+                                </div>
+                                <div className={`flex h-11 w-11 items-center justify-center rounded-full ${card.iconBg}`}>
+                                    {card.icon}
+                                </div>
                             </div>
-                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                                <GoProjectRoadmap className="text-green-600 text-xl"/>
-                            </div>
-                        </div>
-                        <div className="mt-4 flex justify-end items-center gap-8 text-sm">
-                            <div className="text-center">
-                                <p className="text-gray-500">Active</p>
-                                <p className="font-medium text-green-600">{data?.project?.activeProject}</p>
-                            </div>
-                            <div className="text-center">
-                                <p className="text-gray-500">Deleted</p>
-                                <p className="font-medium text-red-600">{data?.project?.deleteProject}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Review Analytics */}
-                    <div
-                        className="bg-white rounded-lg shadow-sm p-6"
-                    >
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-500">Total Blog&#39;s</p>
-                                <h3 className="text-2xl font-bold text-gray-900 mt-1">{data?.blog?.totalBlog}</h3>
-                            </div>
-                            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                                <FaBlogger className="text-purple-500 text-xl"/>
+                            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                                <div className="rounded-md bg-slate-50 px-3 py-2">
+                                    <p className="text-slate-500">Active</p>
+                                    <p className="font-semibold text-emerald-600">{card.active || 0}</p>
+                                </div>
+                                <div className="rounded-md bg-slate-50 px-3 py-2">
+                                    <p className="text-slate-500">{card.label === "Messages" ? "Read" : "Deleted"}</p>
+                                    <p className="font-semibold text-rose-600">{card.archived || 0}</p>
+                                </div>
                             </div>
                         </div>
-                        <div className="mt-4 flex justify-end items-center gap-8 text-sm">
-                            <div className="text-center">
-                                <p className="text-gray-500">Active</p>
-                                <p className="font-medium text-green-600">{data?.blog?.activeBlog}</p>
-                            </div>
-                            <div className="text-center">
-                                <p className="text-gray-500">Deleted</p>
-                                <p className="font-medium text-red-600">{data?.blog?.deleteBlog}</p>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div className="bg-white rounded-lg shadow-sm p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-500">Total Skill&#39;s</p>
-                                <h3 className="text-2xl font-bold text-gray-900 mt-1">{data?.skill?.totalSkill}</h3>
-                            </div>
-                            <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
-                                <GiSkills className="text-amber-600 text-xl"/>
-                            </div>
-                        </div>
-                        <div className="mt-4 flex justify-end items-center gap-8 text-sm">
-                            <div className="text-center">
-                                <p className="text-gray-500">Active</p>
-                                <p className="font-medium text-green-600">{data?.skill?.activeSkill}</p>
-                            </div>
-                            <div className="text-center">
-                                <p className="text-gray-500">Deleted</p>
-                                <p className="font-medium text-red-600">{data?.skill?.deleteSkill}</p>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div className="bg-white rounded-lg shadow-sm p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-500">Total Message&#39;s</p>
-                                <h3 className="text-2xl font-bold text-gray-900 mt-1">{data?.message?.totalMessage}</h3>
-                            </div>
-                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                                <FaComments className="text-blue-600 text-xl"/>
-                            </div>
-                        </div>
-                        <div className="mt-4 flex justify-end items-center gap-8 text-sm">
-                            <div className="text-center">
-                                <p className="text-gray-500">New</p>
-                                <p className="font-medium text-green-600">{data?.message?.newMessage}</p>
-                            </div>
-                            <div className="text-center">
-                                <p className="text-gray-500">Old</p>
-                                <p className="font-medium text-red-600">{data?.message?.oldMessage}</p>
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-                    <h2 className="text-xl font-bold text-gray-900 mb-6">Recent Messages</h2>
+                <div className="mb-8 rounded-2xl border border-slate-200/80 bg-white/90 p-4 shadow-lg shadow-slate-200/60 backdrop-blur sm:p-6">
+                    <h2 className="mb-4 text-lg font-semibold text-slate-900 sm:mb-6 sm:text-xl">Recent Messages</h2>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
+                        <table className="min-w-full divide-y divide-slate-200">
+                            <thead className="bg-slate-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500 sm:px-6">
                                     Sending Date
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500 sm:px-6">
                                     Subject
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500 sm:px-6">
                                     Sender Name
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500 sm:px-6">
                                     Sender Email
-                                </th><th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                </th><th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500 sm:px-6">
                                     Status
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500 sm:px-6">
                                     Action
                                 </th>
                             </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="divide-y divide-slate-200 bg-white">
                             {data?.message?.message.map((message) => (
-                                <tr key={message._id} className={`${!message?.isReded && "bg-purple-100"}`}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                <tr key={message._id} className={`${!message?.isReded ? "bg-indigo-50/70" : ""}`}>
+                                    <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-slate-900 sm:px-6">
                                         {new Date(message.createdAt).toLocaleDateString()}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {message.messageTitle?.slice(0, 30)} ...
+                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-slate-600 sm:px-6">
+                                        {message.messageTitle?.slice(0, 30)}...
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-slate-900 sm:px-6">
                                         {message.senderName}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-slate-600 sm:px-6">
                                         {message.senderEmail}
                                     </td>
-                                    <td className={`${message?.isReded? "text-green-500":"text-red-500"} px-6 py-4 whitespace-nowrap text-sm `}>
+                                    <td className={`${message?.isReded? "text-emerald-600":"text-rose-600"} whitespace-nowrap px-4 py-4 text-sm font-medium sm:px-6`}>
                                         {message?.isReded? "Resolved" : "Unread"}
                                     </td>
-                                    <td className="">
+                                    <td className="px-4 py-4 sm:px-6">
                                         <ViewMessageDialog message={message} />
                                     </td>
                                 </tr>

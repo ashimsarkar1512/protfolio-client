@@ -113,16 +113,18 @@ export function Manage_Project_Table({ data }: Props) {
   });
 
   return (
-    <div className="rounded-md border">
-      <div className="bg-secondary p-6 text-center">
-        <h1 className="text-2xl font-bold ">All Projects</h1>
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="border-b border-slate-200 bg-slate-50 p-4 text-center sm:p-6">
+        <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">All Projects</h1>
+        <p className="mt-1 text-sm text-slate-600">Review, edit, or remove projects from your portfolio.</p>
       </div>
+      <div className="overflow-x-auto">
       <Table>
-        <TableHeader className={"bg-secondary"}>
+        <TableHeader className={"bg-slate-50"}>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead key={header.id} className="whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
@@ -134,9 +136,9 @@ export function Manage_Project_Table({ data }: Props) {
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row.id} className="hover:bg-slate-50/80">
               {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
+                <TableCell key={cell.id} className="px-4 py-3 align-middle text-sm text-slate-700">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}
@@ -144,6 +146,7 @@ export function Manage_Project_Table({ data }: Props) {
           ))}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 }

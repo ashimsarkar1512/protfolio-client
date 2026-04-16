@@ -28,11 +28,11 @@ export function TeamSwitcher() {
                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
              >
                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                 <Image src={"/mypic.jpg"} width={600} height={600} alt={"Abumahid Islam"} className="size-10" />
+                 <Image src={"/mypic.jpg"} width={600} height={600} alt={"ashim sarkar"} className="size-10" />
                </div>
                <div className="grid flex-1 text-left text-sm leading-tight">
-                 <span className="truncate font-medium text-primary">Md Abu-Mahid</span>
-                 <span className="truncate text-xs">Full-Stack Developer</span>
+                 <span className="truncate font-medium text-primary">Ashim Sarkar</span>
+                 <span className="truncate text-xs">Frontend Developer</span>
                </div>
                <ChevronsUpDown className="ml-auto" />
              </SidebarMenuButton>

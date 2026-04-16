@@ -44,24 +44,28 @@ const ManageSkillTable = ({skills}:{skills:TSkill[]}) => {
         });
     }
     return (
-        <div className="border rounded-md p-4">
-            <h2 className="text-xl font-semibold mb-4">Manage Skills</h2>
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-4 py-5 sm:px-6">
+                <h2 className="text-xl font-semibold text-slate-900">Manage Skills</h2>
+                <p className="mt-1 text-sm text-slate-600">Keep your skill stack accurate and up to date.</p>
+            </div>
+            <div className="overflow-x-auto p-4 sm:p-6">
             <Table>
                 <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-[50px]">Icon</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                    <TableRow className="bg-slate-50">
+                        <TableHead className="w-[60px] whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Icon</TableHead>
+                        <TableHead className="whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Name</TableHead>
+                        <TableHead className="whitespace-nowrap px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {skills.map((skill) => (
-                        <TableRow key={skill._id}>
-                            <TableCell>
+                        <TableRow key={skill._id} className="hover:bg-slate-50/80">
+                            <TableCell className="px-4 py-3 text-slate-700">
                                 <Icon icon={skill.icon} width={24} height={24} />
                             </TableCell>
-                            <TableCell>{skill.name}</TableCell>
-                            <TableCell className="text-right space-x-2 flex justify-end items-center">
+                            <TableCell className="px-4 py-3 text-sm font-medium text-slate-900">{skill.name}</TableCell>
+                            <TableCell className="flex items-center justify-end space-x-2 px-4 py-3 text-right">
                                 <UpdateSkillDialog skill={skill} />
                                 <Button onClick={()=>handleDelete(skill._id as string)} variant="destructive" size="sm">
                                     Delete
@@ -71,6 +75,7 @@ const ManageSkillTable = ({skills}:{skills:TSkill[]}) => {
                     ))}
                 </TableBody>
             </Table>
+            </div>
         </div>
     );
 };

@@ -17,8 +17,8 @@ import {
 
 
 export const metadata: Metadata = {
-    title: "Dashboard of Abumahid Islam",
-    description: "This is a portfolio dashboard of Abumahid Islam",
+    title: "Dashboard of Ashim sarkar",
+    description: "This is a portfolio dashboard of Ashim Sarkar",
 };
 
 export default function DashboardLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
@@ -27,26 +27,26 @@ export default function DashboardLayout({children,}: Readonly<{ children: React.
             <AppSidebar/>
             <SidebarInset>
                 <header
-                    className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-                    <div className="flex items-center gap-2 px-4">
+                    className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                    <div className="flex items-center gap-2 px-3 sm:px-4">
                         <SidebarTrigger className="-ml-1"/>
                         <Separator orientation="vertical" className="mr-2 h-4"/>
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
                                     <BreadcrumbLink href="#">
-                                        Building Your Application
+                                        Portfolio Admin
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block"/>
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                                    <BreadcrumbPage>Dashboard</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
                     </div>
                 </header>
-                <div className="px-2">{children}</div>
+                <div className="min-h-[calc(100svh-4rem)] bg-gradient-to-b from-slate-50 via-indigo-50/30 to-slate-100/70">{children}</div>
             </SidebarInset>
         </SidebarProvider>
     );

@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  position: relative;
-}
-
-body {
-  background-color: black;
-  color: white;
-}
-
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -92,7 +80,20 @@ body {
   * {
     @apply border-border;
   }
+
+  html,
   body {
-    @apply bg-background text-foreground;
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-image:
+      radial-gradient(circle at 8% 10%, rgba(59, 130, 246, 0.15), transparent 28%),
+      radial-gradient(circle at 90% 82%, rgba(168, 85, 247, 0.18), transparent 30%),
+      linear-gradient(to bottom, #f8fafc, #f1f5f9 40%, #eef2ff);
   }
 }

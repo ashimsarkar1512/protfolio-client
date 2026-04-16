@@ -1,7 +1,9 @@
 "use server"
 import {cookies} from "next/headers";
 import {revalidateTag} from "next/cache";
-const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+import {getServerUrl} from "@/lib/server-url";
+
+const server_url = getServerUrl();
 
 
 export const create_new_blog = async (payload:FormData) =>{
